@@ -1,0 +1,30 @@
+﻿<Window x:Class="WpfAppMain.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfAppMain"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+       
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <TextBlock Text="原始值" VerticalAlignment="Center" Margin="3"></TextBlock>
+            <TextBox Text=" " Width="151" Name="tb1" Height="24" VerticalAlignment="Center" Margin="3"></TextBox>
+            <Button Width="55" Height="23" Click="Button_Click" Margin="3" Content="des加密"/>
+            <TextBox Text=" " Width="200" Height="24" Name="tb2" VerticalAlignment="Center" Margin="3"></TextBox>
+            <!--<Button Width="111" Height="33" Command="{Binding LoadViewCommand}" CommandParameter="lib2ViewB" Margin="3"/>-->
+             
+        </StackPanel>
+        <ContentControl prism:RegionManager.RegionName="MainRegion" Grid.Row="1"  />
+         
+    </Grid>
+</Window>

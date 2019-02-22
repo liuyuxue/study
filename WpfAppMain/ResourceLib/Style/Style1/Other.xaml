@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework">
+
+    <!--<sys:Double x:Key="num">13</sys:Double>
+    <BitmapImage x:Key="img_search" UriSource="/ResourceLib;component/Style/Style1/Image/button.png"/>
+     <ImageBrush x:Key="img_search2" Stretch="Fill" ImageSource="../Image/small.png"/>
+    <SolidColorBrush x:Key="color_blue"  Color="Blue"></SolidColorBrush>
+    -->
+     
+</ResourceDictionary>

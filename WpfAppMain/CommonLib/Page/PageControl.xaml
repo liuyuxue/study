@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="CommonLib.PageControl" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CommonLib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="PageBtuStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="root"  RenderTransformOrigin=".5,.5" CornerRadius="2">
+                            <Grid>
+                                <ContentPresenter x:Name="MyContentPresenter" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Rectangle x:Name="rbg" Opacity="0" Height="2" Fill="#FF194998" Width="{Binding ElementName=MyContentPresenter,Path=ActualWidth}" VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" TargetName="rbg" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal"  TextBlock.Foreground="White">
+        <Button Name="firstbtn" Width="50" Height="30" Margin="20,5,20,5" VerticalAlignment="Center" Content="首页" Style="{StaticResource PageBtuStyle}"
+                                    Command="{Binding FirstPageCmd}"/>
+        <Button Name="upbtn"  Width="50" Height="30" Margin="0,5,20,5"  VerticalAlignment="Center" Content="上一页" Style="{StaticResource PageBtuStyle}"
+                                    Command="{Binding UpPageCmd}"  />
+        <StackPanel Name="sp_indexs" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Width" Value="20"/>
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="Command" Value="{Binding GoToPageCmd}"/>
+                    <!--<Setter Property="CommandParameter" Value="{Binding Path=Content}"/>-->
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="0.7" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Background" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="Uid" Value="1">
+                            <Setter Property="Background" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="Uid" Value="0">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Resources>
+            <!--<Button  Content="1" CommandParameter="1"/>
+            <Button  Content="2" CommandParameter="2"/>
+            <Button  Content="3" CommandParameter="3"/>
+            <Button  Content="4" CommandParameter="4" />
+            <Button  Content="5" CommandParameter="5"/>
+
+            <TextBlock Text="第" Foreground="Gray"></TextBlock>
+            <TextBlock Name="tbindex" Text="0"  Foreground="Gray"></TextBlock>
+            <TextBlock Text="页" Foreground="Gray"></TextBlock>-->
+        </StackPanel>
+        <Button Name="downbtn"   Width="50" Height="30" Margin="20,5,20,5" VerticalAlignment="Center" Content="下一页" Style="{StaticResource PageBtuStyle}"
+                                    Command="{Binding DownPageCmd}"   />
+        <Button Name="endbtn"  Width="50" Height="30" Margin="0,5,20,5"  VerticalAlignment="Center" Content="末页" Style="{StaticResource PageBtuStyle}"
+                                    Command="{Binding LastPageCmd}"  />
+    </StackPanel>
+</UserControl>

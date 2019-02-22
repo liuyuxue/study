@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    >
+    <sys:String x:Key ="Msg_SendSucceful">发送成功!</sys:String>
+
+    <sys:String x:Key ="Msg_Yes">是</sys:String>
+    <sys:String x:Key ="Msg_No">否</sys:String>
+    <sys:String x:Key ="Msg_Close">确认</sys:String>
+
+    <sys:String x:Key ="Msg_more">more...</sys:String>
+    <sys:String x:Key ="Msg_nodata">No Data</sys:String>
+
+    <sys:String x:Key ="Msg_cn">中文</sys:String>
+    <sys:String x:Key ="Msg_en">英文</sys:String>
+    <sys:String x:Key ="Msg_UnInstall">卸载</sys:String>
+    <sys:String x:Key ="Msg_submit">提交</sys:String>
+   
+</ResourceDictionary>
