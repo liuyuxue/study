@@ -7,9 +7,9 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        
+        xmlns:chartuc="clr-namespace:CommonLib.ChartTools;assembly=CommonLib"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="525">
+        Title="{Binding Title}" Height="650" Width="525">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -24,7 +24,10 @@
             <!--<Button Width="111" Height="33" Command="{Binding LoadViewCommand}" CommandParameter="lib2ViewB" Margin="3"/>-->
              
         </StackPanel>
-        <ContentControl prism:RegionManager.RegionName="MainRegion" Grid.Row="1"  />
+        <!--<ContentControl prism:RegionManager.RegionName="MainRegion" Grid.Row="1"  />-->
+        <Grid  Grid.Row="1" >
+            <chartuc:UcAnnulus x:Name="uc" Width="300" Height="300" Bg="#393836" UnUseColor="#DCDEDD" InUseColor="red" Angle="45"></chartuc:UcAnnulus>
+        </Grid>
          
     </Grid>
 </Window>

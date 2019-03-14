@@ -34,9 +34,9 @@ namespace WpfAppMain
             string k = tb1.Text.Trim();
             if (k == "")
                 return;
+            uc.Angle = Convert.ToDouble(k);
 
-
-            tb2.Text = EncryptTools.DesEncrypt(k,key);
+            
         }
     }
 }

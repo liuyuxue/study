@@ -25,7 +25,7 @@ namespace NetLib
             return json;
         }
 
-        public static string SendGet(string url, IDictionary<string, string> parameters)
+        public static string SendGet(string url )
         {
             HttpWebResponse resp;
             resp = SimpleHttpWebResponseUtility.CreateGetHttpResponse(url, null, null, null);
