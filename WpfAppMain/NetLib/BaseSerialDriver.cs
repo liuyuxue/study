@@ -56,21 +56,23 @@ namespace NetLib
         byte Tail;  //包尾 = 0x03;        
         bool NeedVerify;//是否有校验位
 
+       
+
         SerialPort serialPort;
         byte[] lostbts; //上次丢失数据
         ConcurrentQueue<byte[]> byteQueue = new ConcurrentQueue<byte[]>();//收到的数据全存这里
 
-        public delegate void SendSerialDataHandle(byte[] bs);
-        public event SendSerialDataHandle SendSerialDataEvent;
+        //public delegate void SendSerialDataHandle(byte[] bs);
+        //public event SendSerialDataHandle SendSerialDataEvent;
 
         public delegate void ReceiveSerialDataHandle(BaseSericalCmdResult data);
         public event ReceiveSerialDataHandle ReceiveSerialDataEvent;
 
-        public delegate void OpenSerialHandle(string com);
-        public event OpenSerialHandle OpenSerialEvent;
+        //public delegate void OpenSerialHandle(string com);
+        //public event OpenSerialHandle OpenSerialEvent;
 
-        public delegate void CloseSerialHandle();
-        public event CloseSerialHandle CloseSerialEvent;
+        //public delegate void CloseSerialHandle();
+        //public event CloseSerialHandle CloseSerialEvent;
 
         public bool IsConnected
         {
@@ -82,7 +84,7 @@ namespace NetLib
             }
         }
 
-        public void OpenSeriesPort(string com)
+        public bool OpenSeriesPort(string com)
         {
             if (serialPort == null)
             {
@@ -98,13 +100,13 @@ namespace NetLib
                 serialPort.Open();
                 if (!serialPort.IsOpen)
                 {
-                    return;
+                    return false;
                 }
 
                 //CmdNum = 1;
                 byteQueue = new ConcurrentQueue<byte[]>();
                 lostbts = null;
-                OpenSerialEvent?.Invoke(com);
+                
             }
 
             serialPort.DataReceived -= SerialDataReceived;
@@ -117,6 +119,7 @@ namespace NetLib
                     DataPaly();
                 }
             });
+            return true;
         }
 
 
@@ -124,10 +127,10 @@ namespace NetLib
         /// 关闭串口
         /// </summary>
         /// <returns></returns>
-        public void CloseSeriesPort()
+        public bool CloseSeriesPort()
         {
             if (serialPort == null || !serialPort.IsOpen)
-                return;
+                return false;
 
             lostbts = null;
             try
@@ -136,12 +139,15 @@ namespace NetLib
                 {
                     serialPort.DataReceived -= SerialDataReceived;
                     serialPort.Close();
-                    CloseSerialEvent?.Invoke();
+                    serialPort = null;
+                   // CloseSerialEvent?.Invoke();
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 string s = ex.Message;
+                return false;
             }
         }
 
@@ -154,7 +160,6 @@ namespace NetLib
                 byte[] buf = new byte[n];
                 comm.Read(buf, 0, n);
                 byteQueue.Enqueue(buf);
-
             }
             catch (Exception ex)
             {
@@ -208,9 +213,17 @@ namespace NetLib
                             Array.Copy(Newbts, i, fullBytes, 0, fullBytes.Length);
                             i += fullBytes.Length - 1;
 
-                            var check1 = ByteCalcHelper.CalcXOr(fullBytes, 1, 1 + len_data);
-                            var check2 = fullBytes[fullBytes.Length - 2];
-                            if (check1 == check2)
+                            if (NeedVerify)
+                            {
+                                var check1 = ByteCalcHelper.CalcXOr(fullBytes, 1, 1 + len_data);
+                                var check2 = fullBytes[fullBytes.Length - 2];
+                                if (check1 == check2)
+                                {
+                                    var r = new BaseSericalCmdResult() { Bytes = fullBytes };
+                                    ReceiveSerialDataEvent?.Invoke(r);
+                                }
+                            }
+                            else
                             {
                                 var r = new BaseSericalCmdResult() { Bytes = fullBytes };
                                 ReceiveSerialDataEvent?.Invoke(r);
@@ -247,7 +260,7 @@ namespace NetLib
                     return false;
 
                 serialPort.Write(bytes, 0, bytes.Length);
-                SendSerialDataEvent?.Invoke(bytes);
+            //    SendSerialDataEvent?.Invoke(bytes);
                 return true;
             }
             catch (Exception ee)

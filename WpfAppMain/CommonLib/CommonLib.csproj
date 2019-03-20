@@ -63,11 +63,13 @@
     <Compile Include="ChartTools\UcAnnulus.xaml.cs">
       <DependentUpon>UcAnnulus.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Control\GifImage.cs" />
     <Compile Include="Control\NumericBox.cs" />
     <Compile Include="Control\PopWindow.xaml.cs">
       <DependentUpon>PopWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Control\ScrollListView.cs" />
+    <Compile Include="Control\UnityView.cs" />
     <Compile Include="Page\IPage.cs" />
     <Compile Include="Page\PageControl.xaml.cs">
       <DependentUpon>PageControl.xaml</DependentUpon>

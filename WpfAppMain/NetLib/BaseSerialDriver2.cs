@@ -31,20 +31,20 @@ namespace NetLib
         SerialPort serialPort;
         #endregion
 
-        public delegate void SendSerialDataHandle(byte[] bs);
-        public event SendSerialDataHandle SendSerialDataEvent;
+        //public delegate void SendSerialDataHandle(byte[] bs);
+        //public event SendSerialDataHandle SendSerialDataEvent;
 
-        public delegate void ReceiveSerialDataHandle(BaseSericalCmdResult data);
-        public event ReceiveSerialDataHandle ReceiveSerialDataEvent;
+        //public delegate void ReceiveSerialDataHandle(BaseSericalCmdResult data);
+        //public event ReceiveSerialDataHandle ReceiveSerialDataEvent;
 
-        public delegate void OpenSerialHandle(string com);
-        public event OpenSerialHandle OpenSerialEvent;
+        //public delegate void OpenSerialHandle(string com);
+        //public event OpenSerialHandle OpenSerialEvent;
 
-        public delegate void CloseSerialHandle();
-        public event CloseSerialHandle CloseSerialEvent;
+        //public delegate void CloseSerialHandle();
+        //public event CloseSerialHandle CloseSerialEvent;
 
-        public delegate void SerialDataOutTimeHandle(byte[] bs_send);
-        public event SerialDataOutTimeHandle SerialDataOutTimeEvent;
+        //public delegate void SerialDataOutTimeHandle(byte[] bs_send);
+        //public event SerialDataOutTimeHandle SerialDataOutTimeEvent;
 
         public bool IsConnected
         {
@@ -67,7 +67,7 @@ namespace NetLib
             this.NeedVerify = NeedVerify;
         }
 
-        public void OpenSeriesPort(string com)
+        public bool OpenSeriesPort(string com)
         {
             if (serialPort == null)
             {
@@ -83,24 +83,24 @@ namespace NetLib
                 serialPort.Open();
                 if (!serialPort.IsOpen)
                 {
-                    return;
-                }
-            //    CmdNum = 1;
-                OpenSerialEvent?.Invoke(com);
+                    return false;
+                }   
             }
+            return true;
         }
 
 
-        public void CloseSeriesPort()
+        public bool CloseSeriesPort()
         {
             if (serialPort == null || !serialPort.IsOpen)
-                return;
+                return false;
 
             if (serialPort != null && serialPort.IsOpen)
             {
                 serialPort.Close();
-                CloseSerialEvent?.Invoke();
+             //   CloseSerialEvent?.Invoke();
             }
+            return true;
         }
 
         /// <summary>
@@ -122,10 +122,10 @@ namespace NetLib
         /// <summary>
         /// 发送消息
         /// </summary>
-        public bool Send(byte[] bytes_send)
+        public BaseSericalCmdResult Send(byte[] bytes_send)
         {           
             if (!serialPort.IsOpen)
-                return false;
+                return null;
 
             var bytes_send2 = AddEscapeCharacter(bytes_send);
          // string test_hex = SerialCalc.BytesToString(bytes_send2, 16);//这行code是为测试提供方便
@@ -134,37 +134,41 @@ namespace NetLib
                 serialPort.DiscardInBuffer();
                 serialPort.DiscardOutBuffer();
                 serialPort.Write(bytes_send2, 0, bytes_send2.Length);
-                SendSerialDataEvent?.Invoke(bytes_send2);
+               // SendSerialDataEvent?.Invoke(bytes_send2);
                 System.Threading.Thread.Sleep(SendWaitTime);
-
-                int readLength = serialPort.BytesToRead;
-                byte[] reces = new byte[readLength];
-                serialPort.Read(reces, 0, readLength);
-                 
-                if (reces != null)
+                try
                 {
+                    int readLength = serialPort.BytesToRead;
+                    byte[] reces = new byte[readLength];
+                    serialPort.Read(reces, 0, readLength);
+
                     var reces2 = RemoveEscapeCharacter(reces);
                     BaseSericalCmdResult r = new BaseSericalCmdResult() { Bytes = reces2 };
-                    ReceiveSerialDataEvent?.Invoke(r);
-                   
+                    
+                    return r;
                 }
-                else
-                    continue;
+                catch (Exception ex)// 读超时触发异常
+                {
+                    if (i >= 2)
+                        return null;
+                    else
+                        continue;
+                }
+               
             }
-            SerialDataOutTimeEvent?.Invoke(bytes_send);//重复三次发送，未收到回应，触发超时事件
-            return false;
-
+            return null;
+       
         }
 
 
-        public bool SendMessage(string hexCmd)
+        public BaseSericalCmdResult SendMessage(string hexCmd)
         {
             string hexCmd2 = hexCmd.Replace(" ", "");
             var bs = ByteCalcHelper.StrToByteArray(hexCmd2);
             return SendMessage(bs);
         }
 
-        public bool SendMessage(byte[] bytes_send)
+        public BaseSericalCmdResult SendMessage(byte[] bytes_send)
         {
             lock (locker_send)
             {
